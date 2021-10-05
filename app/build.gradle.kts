@@ -3,13 +3,14 @@ plugins {
     kotlin("android")
 }
 
+val kotlinVersion = "1.5.21"
 val composeVersion = "1.0.1"
 
 android {
     compileSdk = 31
 
     defaultConfig {
-        applicationId = "com.neo.wave"
+        applicationId = "com.neo.wave.sample"
         minSdk = 23
         targetSdk = 31
         versionCode = 1
@@ -33,24 +34,26 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        //freeCompilerArgs = freeCompilerArgs + "-P" + "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerVersion = kotlinVersion
     }
-    packagingOptions {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+//    packagingOptions {
+//        resources {
+//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+//        }
+//    }
 }
 
 dependencies {
     implementation(project(":library"))
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
     implementation("androidx.core:core-ktx:1.6.0")
     implementation("androidx.appcompat:appcompat:1.3.1")

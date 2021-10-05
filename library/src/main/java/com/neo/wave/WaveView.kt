@@ -1,5 +1,6 @@
-package com.neo.wave.library
+package com.neo.wave
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -7,5 +8,7 @@ import androidx.compose.ui.Modifier
 fun WaveView(
     modifier: Modifier = Modifier
 ) {
+    Canvas(modifier = modifier) {
 
+    }
 }

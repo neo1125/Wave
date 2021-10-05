@@ -1,4 +1,4 @@
-package com.neo.wave.ui.theme
+package com.neo.wave.test.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
