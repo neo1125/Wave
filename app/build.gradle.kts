@@ -4,7 +4,7 @@ plugins {
 }
 
 val kotlinVersion = "1.5.21"
-val composeVersion = "1.0.1"
+val composeVersion = "1.0.3"
 
 android {
     compileSdk = 31
@@ -34,14 +34,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        //freeCompilerArgs = freeCompilerArgs + "-P" + "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = composeVersion
-        kotlinCompilerVersion = kotlinVersion
     }
 //    packagingOptions {
 //        resources {
