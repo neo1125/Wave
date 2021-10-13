@@ -6,5 +6,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Wave"
-include(":app")
-include(":library")
+include(":app", ":library")

@@ -3,16 +3,13 @@ plugins {
     kotlin("android")
 }
 
-val kotlinVersion = "1.5.21"
-val composeVersion = "1.0.1"
-
 android {
-    compileSdk = 31
+    compileSdk = Versions.compileSdk
 
     defaultConfig {
         applicationId = "com.neo.wave.sample"
-        minSdk = 23
-        targetSdk = 31
+        minSdk = Versions.minSdk
+        targetSdk = Versions.targetSdk
         versionCode = 1
         versionName = "1.0.0"
 
@@ -39,7 +36,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = Versions.composeVersion
     }
 //    packagingOptions {
 //        resources {
@@ -51,19 +48,21 @@ android {
 dependencies {
     implementation(project(":library"))
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation(Kotlin.stdlibVersion)
+    implementation(AndroidX.coreKtxVersion)
+    implementation(AndroidX.appcompatVersion)
+    implementation(AndroidX.lifecycleKtxVersion)
 
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation("androidx.activity:activity-compose:1.3.1")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation(Compose.uiVersion)
+    implementation(Compose.materialVersion)
+    implementation(Compose.previewVersion)
+    implementation(Compose.ActivityVersion)
+
+    implementation(Material.materialVersion)
+
+    testImplementation(Test.junitVersion)
+    androidTestImplementation(Test.androidxJunitVersion)
+    androidTestImplementation(Test.espressoVersion)
+    androidTestImplementation(Test.composeJunitVersion)
+    debugImplementation(Test.composeToolingVersion)
 }
