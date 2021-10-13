@@ -4,7 +4,7 @@ plugins {
 }
 
 val kotlinVersion = "1.5.21"
-val composeVersion = "1.0.3"
+val composeVersion = "1.0.1"
 
 android {
     compileSdk = 31
