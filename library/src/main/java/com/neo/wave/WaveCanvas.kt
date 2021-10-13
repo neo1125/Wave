@@ -2,18 +2,14 @@ package com.neo.wave
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.drawscope.withTransform
-import kotlin.math.min
-import kotlin.math.max
 
 data class WaveCanvas(
     val waveCount: Int = 1,
+    val wavePointCount: Int = 5,
+    val waveSpeed: WaveSpeed,
     val waveColors: List<Color> = listOf(Color.Red),
-    val progress: Float,
     val isDebug: Boolean = false
 ) {
 
@@ -21,42 +17,34 @@ data class WaveCanvas(
 
     fun setup(width: Float, height: Float) {
         for (i in 0 until waveCount) {
-            waves.add(Wave(color = waveColors[i], canvasWidth = width, canvasHeight = height))
+            waves.add(Wave(pointCount = wavePointCount, color = waveColors[i], speed = waveSpeed, canvasWidth = width, canvasHeight = height))
         }
     }
 
-    fun update() {
+    private fun update() {
         waves.forEach { it.update() }
     }
 
     @Composable
     fun Render(
         modifier: Modifier = Modifier,
-        frameState: State<Long>
     ) {
+
+        val frameState = StepFrame {
+            update()
+        }
+
         Canvas(
             modifier = modifier
         ) {
-            val maxOffsetY: Float = size.height * (1f - 0.99f)
-            val minOffsetY: Float = size.height * (1f - 0.03f)
-            val top = max(maxOffsetY, min(minOffsetY, (size.height * (1f - progress))))
-            withTransform({
-                translate(left = 0f, top = top)
-            }) {
-                drawIntoCanvas {
-                    it.save()
-                    frameState.value
-                    waves.forEach { wave ->
-                        drawWave(wave = wave)
+            frameState.value
+            waves.forEach { wave ->
+                drawWave(wave = wave)
 
-                        if (isDebug) {
-                            drawWaveDebug(wave)
-                        }
-                    }
+                if (isDebug) {
+                    drawWaveDebug(wave)
                 }
-
             }
-
         }
     }
 }

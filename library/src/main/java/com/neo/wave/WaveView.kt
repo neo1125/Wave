@@ -1,42 +1,42 @@
 package com.neo.wave
 
 import android.view.MotionEvent
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalDensity
+import kotlin.math.max
+import kotlin.math.min
 
 @ExperimentalComposeUiApi
 @Composable
 fun WaveView(
     modifier: Modifier = Modifier,
     waveColor: Color = Color.Red,
+    wavePointCount: Int = 5,
     waveSpeed: WaveSpeed = WaveSpeed.NORMAL,
     progress: Float = 0f,
+    dragEnabled: Boolean = true,
     isDebugMode: Boolean = false,
     onProgressUpdated: (progress: Float) -> Unit = {}
 ) {
     val density = LocalDensity.current
-    var waveProgress by remember { mutableStateOf(progress) }
+    var waveProgress by remember { mutableStateOf(calculateProgress(progress = progress)) }
     var viewHeight by remember { mutableStateOf(0f)}
     var waveCanvas by remember { mutableStateOf<WaveCanvas?>(null)}
-    val frameState = StepFrame(callbackTime = waveSpeed.time) {
-        waveCanvas?.update()
-    }
 
     LaunchedEffect(progress) {
-        waveProgress = progress
+        waveProgress = calculateProgress(progress = progress)
     }
 
     Box(
@@ -45,20 +45,18 @@ fun WaveView(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
+                .clipToBounds()
                 .pointerInteropFilter {
-                    when (it.action) {
-                        MotionEvent.ACTION_MOVE -> {
-                            waveProgress = (viewHeight - it.y) / viewHeight
-                            onProgressUpdated(waveProgress)
-                        }
-                        MotionEvent.ACTION_UP -> {
-                            waveProgress = (viewHeight - it.y) / viewHeight
-                            onProgressUpdated(waveProgress)
+                    if (dragEnabled) {
+                        when (it.action) {
+                            MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
+                                waveProgress = calculateProgress(progress = (viewHeight - it.y) / viewHeight)
+                                onProgressUpdated(waveProgress)
+                            }
                         }
                     }
                     true
-                }
-            ,
+                },
             contentAlignment = Alignment.Center
         ) {
 
@@ -68,43 +66,21 @@ fun WaveView(
             waveCanvas = WaveCanvas(
                 waveCount = 1,
                 waveColors = listOf(waveColor),
-                progress = waveProgress,
+                wavePointCount = wavePointCount,
+                waveSpeed = waveSpeed,
                 isDebug = isDebugMode
             ).apply {
                 setup(width = viewWidth, height = viewHeight)
             }
 
             waveCanvas?.Render(
-                modifier = Modifier.fillMaxSize(),
-                frameState = frameState
-            )
-        }
-
-//        Ruler(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(Color.Transparent)
-//        )
-    }
-}
-
-@Composable
-fun Ruler(
-    modifier: Modifier = Modifier,
-    strokeWidth: Float = 2f,
-    color: Color = Color.LightGray.copy(0.3f)
-) {
-    Canvas(
-        modifier = modifier
-    ) {
-        val spacing = size.height / 9
-        for (i in 0 until 10) {
-            drawLine(
-                color = color,
-                start = Offset(0f, spacing * i - (strokeWidth / 2)),
-                end = Offset(size.width, spacing * i - (strokeWidth / 2)),
-                strokeWidth = strokeWidth
+                modifier = Modifier.fillMaxSize().offset(y = maxHeight * (1f - waveProgress)),
             )
         }
     }
 }
+
+fun calculateProgress(minProgress: Float = 0.03f, maxProgress: Float = 0.99f, progress: Float): Float {
+    return min(maxProgress, max(minProgress, progress))
+}
+

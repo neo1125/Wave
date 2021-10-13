@@ -1,5 +1,6 @@
 package com.neo.wave
 
-enum class WaveSpeed(val time: Long) {
-    SLOW(100L), NORMAL(30L), FAST(10L)
+enum class WaveSpeed(val value: Float) {
+    SLOW(0.05f), NORMAL(0.15f),
+    FAST(0.3f)
 }

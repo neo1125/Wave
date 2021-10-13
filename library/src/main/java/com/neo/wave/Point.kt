@@ -7,7 +7,7 @@ data class Point(
     val x: Float,
     var y: Float,
     val fixedY: Float = y,
-    val speed: Float = 0.2f,
+    val speed: Float = WaveSpeed.NORMAL.value,
     var curSpeed: Float = index.toFloat(),
     val max: Double = Math.random() * 5 + 10
 ) {

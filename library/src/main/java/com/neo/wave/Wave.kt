@@ -9,14 +9,16 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 data class Wave(
     val pointCount: Int = 5,
     val color: Color,
+    val speed: WaveSpeed,
     val canvasWidth: Float,
     val canvasHeight: Float,
 ) {
     val points: MutableList<Point> = mutableListOf()
+
     init {
         val gap: Float = canvasWidth / (pointCount - 1)
         for (i in 0 until pointCount) {
-            points.add(Point(index = i, gap * i, 0f))
+            points.add(Point(index = i, x =gap * i, y = 0f, speed = speed.value))
         }
     }
 
