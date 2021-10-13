@@ -1,4 +1,4 @@
-package com.neo.wave.test
+package com.neo.wave.sample
 
 import org.junit.Test
 

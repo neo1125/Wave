@@ -1,4 +1,4 @@
-package com.neo.wave.test
+package com.neo.wave.sample
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.neo.wave.test.ui.theme.WaveTheme
+import com.neo.wave.sample.ui.theme.WaveTheme
+import com.neo.wave.sample.ui.view.OptionScreen
 
 class MainActivity : ComponentActivity() {
 
-    @ExperimentalComposeUiApi
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

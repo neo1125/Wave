@@ -1,4 +1,4 @@
-package com.neo.wave.test.component
+package com.neo.wave.sample.ui.view.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

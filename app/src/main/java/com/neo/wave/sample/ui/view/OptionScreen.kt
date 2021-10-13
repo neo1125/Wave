@@ -1,4 +1,4 @@
-package com.neo.wave.test
+package com.neo.wave.sample.ui.view
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -13,8 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.neo.wave.WaveSpeed
 import com.neo.wave.WaveView
-import com.neo.wave.test.component.CheckBoxText
-import com.neo.wave.test.component.OptionControl
+import com.neo.wave.sample.ui.view.component.CheckBoxText
+import com.neo.wave.sample.ui.view.component.OptionControl
 
 @ExperimentalComposeUiApi
 @Composable

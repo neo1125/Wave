@@ -1,4 +1,4 @@
-package com.neo.wave.test
+package com.neo.wave.sample
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

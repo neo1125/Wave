@@ -1,4 +1,4 @@
-package com.neo.wave.test.ui.theme
+package com.neo.wave.sample.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
