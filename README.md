@@ -2,6 +2,7 @@
 Wave Progress View for android compose
 
 ## Sample
+<img src="sample.gif" width="50%" height="50%">
 
 ## Download
 ```kotlin
