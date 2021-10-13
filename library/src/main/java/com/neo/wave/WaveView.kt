@@ -15,8 +15,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalDensity
-import kotlin.math.max
-import kotlin.math.min
 
 @ExperimentalComposeUiApi
 @Composable
@@ -31,12 +29,12 @@ fun WaveView(
     onProgressUpdated: (progress: Float) -> Unit = {}
 ) {
     val density = LocalDensity.current
-    var waveProgress by remember { mutableStateOf(calculateProgress(progress = progress)) }
+    var waveProgress by remember { mutableStateOf(WaveCanvas.calculateWaveProgress(progress = progress)) }
     var viewHeight by remember { mutableStateOf(0f)}
-    var waveCanvas by remember { mutableStateOf<WaveCanvas?>(null)}
+    val waveCanvas by remember { mutableStateOf(WaveCanvas())}
 
     LaunchedEffect(progress) {
-        waveProgress = calculateProgress(progress = progress)
+        waveProgress = WaveCanvas.calculateWaveProgress(progress = progress)
     }
 
     Box(
@@ -50,7 +48,7 @@ fun WaveView(
                     if (dragEnabled) {
                         when (it.action) {
                             MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
-                                waveProgress = calculateProgress(progress = (viewHeight - it.y) / viewHeight)
+                                waveProgress = WaveCanvas.calculateWaveProgress(progress = (viewHeight - it.y) / viewHeight)
                                 onProgressUpdated(waveProgress)
                             }
                         }
@@ -60,27 +58,20 @@ fun WaveView(
             contentAlignment = Alignment.Center
         ) {
 
-            val viewWidth: Float = with(density) { maxWidth.toPx() }
-            viewHeight = with(density) { maxHeight.toPx() }
-
-            waveCanvas = WaveCanvas(
-                waveCount = 1,
-                waveColors = listOf(waveColor),
-                wavePointCount = wavePointCount,
-                waveSpeed = waveSpeed,
-                isDebug = isDebugMode
-            ).apply {
-                setup(width = viewWidth, height = viewHeight)
+            LaunchedEffect(Unit) {
+                val viewWidth: Float = with(density) { maxWidth.toPx() }
+                viewHeight = with(density) { maxHeight.toPx() }
+                waveCanvas.setup(width = viewWidth, height = viewHeight)
             }
 
-            waveCanvas?.Render(
+            waveCanvas.Render(
                 modifier = Modifier.fillMaxSize().offset(y = maxHeight * (1f - waveProgress)),
+                wavePointCount = wavePointCount,
+                waveColors = listOf(waveColor),
+                waveSpeed = waveSpeed,
+                isDebug = isDebugMode
             )
         }
     }
-}
-
-fun calculateProgress(minProgress: Float = 0.03f, maxProgress: Float = 0.99f, progress: Float): Float {
-    return min(maxProgress, max(minProgress, progress))
 }
 

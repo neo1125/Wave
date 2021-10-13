@@ -4,32 +4,46 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import kotlin.math.max
+import kotlin.math.min
 
-data class WaveCanvas(
-    val waveCount: Int = 1,
-    val wavePointCount: Int = 5,
-    val waveSpeed: WaveSpeed,
-    val waveColors: List<Color> = listOf(Color.Red),
-    val isDebug: Boolean = false
-) {
+class WaveCanvas {
+
+    private val waveCount: Int = 1
+    private var wavePointCount: Int = 5
+    private var waveSpeed: WaveSpeed = WaveSpeed.NORMAL
 
     private val waves: MutableList<Wave> = mutableListOf()
 
     fun setup(width: Float, height: Float) {
         for (i in 0 until waveCount) {
-            waves.add(Wave(pointCount = wavePointCount, color = waveColors[i], speed = waveSpeed, canvasWidth = width, canvasHeight = height))
+            waves.add(Wave(pointCount = wavePointCount, canvasWidth = width, canvasHeight = height))
         }
     }
 
     private fun update() {
-        waves.forEach { it.update() }
+        // FIXME : wave point update 개선
+        waves.toList().forEachIndexed { index, wave ->
+            if (wave.pointCount != wavePointCount) {
+                waves[index] = Wave(wavePointCount, wave.canvasWidth, wave.canvasHeight)
+            }
+        }
+        waves.forEach {
+            it.update(speed = waveSpeed)
+        }
     }
 
     @Composable
     fun Render(
         modifier: Modifier = Modifier,
+        wavePointCount: Int,
+        waveColors: List<Color> = listOf(Color.Red),
+        waveSpeed: WaveSpeed,
+        isDebug: Boolean = false
     ) {
 
+        this.wavePointCount = wavePointCount
+        this.waveSpeed = waveSpeed
         val frameState = StepFrame {
             update()
         }
@@ -39,12 +53,18 @@ data class WaveCanvas(
         ) {
             frameState.value
             waves.forEach { wave ->
-                drawWave(wave = wave)
+                drawWave(wave = wave, color = waveColors.first())
 
                 if (isDebug) {
                     drawWaveDebug(wave)
                 }
             }
+        }
+    }
+
+    companion object {
+        fun calculateWaveProgress(minProgress: Float = 0.03f, maxProgress: Float = 0.99f, progress: Float): Float {
+            return min(maxProgress, max(minProgress, progress))
         }
     }
 }

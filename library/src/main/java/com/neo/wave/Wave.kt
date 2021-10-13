@@ -1,5 +1,6 @@
 package com.neo.wave
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -8,8 +9,6 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 
 data class Wave(
     val pointCount: Int = 5,
-    val color: Color,
-    val speed: WaveSpeed,
     val canvasWidth: Float,
     val canvasHeight: Float,
 ) {
@@ -18,18 +17,21 @@ data class Wave(
     init {
         val gap: Float = canvasWidth / (pointCount - 1)
         for (i in 0 until pointCount) {
-            points.add(Point(index = i, x =gap * i, y = 0f, speed = speed.value))
+            points.add(Point(index = i, x = gap * i, y = 0f))
         }
     }
 
-    fun update() {
+    fun update(speed: WaveSpeed) {
         points.forEach {
-            it.update()
+            it.update(speed = speed.value)
         }
     }
 }
 
-fun DrawScope.drawWave(wave: Wave) {
+fun DrawScope.drawWave(
+    wave: Wave,
+    color: Color
+) {
     val path = Path()
     path.reset()
 
@@ -54,7 +56,7 @@ fun DrawScope.drawWave(wave: Wave) {
     path.lineTo(wave.points.firstOrNull()?.x ?: 0f, wave.canvasHeight)
     path.close()
 
-    drawPath(path = path, color = wave.color)
+    drawPath(path = path, color = color)
 }
 
 fun DrawScope.drawWaveDebug(
