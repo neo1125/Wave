@@ -1,8 +1,13 @@
 package com.neo.wave.sample.ui.view
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.Slider
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
@@ -29,7 +34,7 @@ fun OptionScreen(
     )
     var progress by remember { mutableStateOf(0f) }
     var waveColor by remember { mutableStateOf(colors.first()) }
-    var wavePointCount by remember { mutableStateOf(5f) }
+    var wavePointCount by remember { mutableStateOf(5) }
     var waveSpeed by remember { mutableStateOf(WaveSpeed.NORMAL) }
     var isDrag by remember { mutableStateOf(true) }
     var isDebugMode by remember { mutableStateOf(false) }
@@ -45,8 +50,14 @@ fun OptionScreen(
                 .size(width = 300.dp, height = 450.dp)
                 .padding(vertical = 30.dp)
                 .border(width = 2.dp, color = Color.LightGray),
-            //wavePointCount = wavePointCount.toInt(),
-            waveColor = waveColor,
+            wavePointCount = wavePointCount,
+            waveColor = animateColorAsState(
+                targetValue = waveColor,
+                animationSpec = tween(
+                    durationMillis = 1500,
+                    easing = FastOutSlowInEasing
+                )
+            ).value,
             waveSpeed = waveSpeed,
             progress = progress,
             dragEnabled = isDrag,
@@ -96,14 +107,23 @@ fun OptionScreen(
             }
 
             OptionControl(text = "Wave Point Count") {
-                Slider(
-                    modifier = Modifier.padding(horizontal = 10.dp),
-                    value = wavePointCount,
-                    steps = 9,
-                    onValueChange = {
-                        wavePointCount = it
+                Button(onClick = {
+                    if (wavePointCount > 3) {
+                        wavePointCount -= 1
                     }
-                )
+                }) {
+                    Text("-")
+                }
+
+                Text("$wavePointCount")
+
+                Button(onClick = {
+                    if (wavePointCount < 30) {
+                        wavePointCount += 1
+                    }
+                }) {
+                    Text("+")
+                }
             }
 
             OptionControl(text = "Wave Speed") {
