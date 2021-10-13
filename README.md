@@ -28,3 +28,9 @@ WaveView(
     }
 )
 ```
+
+
+
+## Reference
+- https://github.com/ch8n/Compose-boids-flocking/blob/main/src/main/kotlin/main.kt
+- https://www.youtube.com/watch?v=LLfhY4eVwDY
