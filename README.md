@@ -6,7 +6,7 @@ Wave Progress View for android compose
 
 ## Download
 ```kotlin
-
+implementation("io.github.neo1125:wave:1.0.0")
 ```
 
 ## Quick Start
